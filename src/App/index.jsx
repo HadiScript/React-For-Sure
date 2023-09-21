@@ -1,84 +1,101 @@
-import React, { useEffect, useState } from "react";
-import MyForm from "./components/MyForm";
-import UsersList from "./components/UsersList";
+import React from "react";
 
-const initialValues = {
-  name: "",
-  age: 0,
-  status: "",
+const initValues = {
+  email: "",
+  password: "",
+  password2: "",
+  color: "",
 };
 
 const App = () => {
-  const [formData, setFormData] = React.useState(initialValues);
+  // onChange - input - event, propertiesd
+  // const [email, setEmail] = React.useState("");
+  // const [password, setPassword] = React.useState("");
+  // const [password2, setPassword2] = React.useState("");
 
-  const gettingDataFromLS = () => {
-    let dataFromLS = localStorage.getItem("data");
-    console.log(dataFromLS, "from getting func");
-    if (dataFromLS) return JSON.parse(dataFromLS);
-    else {
-      return [];
+  const [formData, setformData] = React.useState(initValues);
+
+  // const changeEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+
+  // const changePassword = (e) => {
+  //   setPassword(e.target.value);
+  // };
+  // const changePassword2 = (e) => {
+  //   setPassword2(e.target.value);
+  // };
+
+  const changeHandler = (e) => {
+    setformData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.password2) {
+      alert("Your password is not matching");
     }
-  };
-
-  const [users, setUsers] = useState(gettingDataFromLS);
-
-  const updateValues = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const addUser = (values) => {
-    // console.log(values, "here is the values comming from form");
-
-    let tempUser = {
-      ...values,
-      id: new Date(),
-      bgcolor: "",
-    };
-    console.log(tempUser, "here is the values comming from form");
-
-    // setUsers -> users
-    // [], [...users, {}]
-
-    setUsers([...users, tempUser]);
-
-    console.log(users, "from add user func");
-  };
-
-  const removeItem = (id) => {
-    setUsers(users.filter((x) => x.id !== id));
-  };
-
-  useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(users));
-  }, [users]);
-
-  const blueColor = (id) => {
-    // console.log(id)
-
-    let newUsers = users.map((user) => {
-      return user.id === id ? { ...user, bgcolor: "orange" } : user;
-    });
-
-    setUsers(newUsers);
+    console.log({ email: formData.email, password: formData.password });
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <MyForm
-        formData={formData}
-        updateValues={updateValues}
-        addUser={addUser}
+    <form
+      onSubmit={submitHandler}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "500px",
+        gap: "10px",
+        backgroundColor: formData.color,
+      }}
+    >
+      {JSON.stringify(formData.color)}
+      <label>Email</label>
+      <input
+        placeholder="Enter your name"
+        type="email"
+        value={formData.email}
+        name="email"
+        onChange={changeHandler}
+        required
       />
-      {users.length > 0 ? (
-        <UsersList
-          users={users}
-          removeItem={removeItem}
-          blueColor={blueColor}
-        />
-      ) : (
-        "No users at the moment"
-      )}
-    </div>
+
+      <label>Password</label>
+      <input
+        placeholder="Enter your name"
+        type={"password"}
+        value={formData.password}
+        name="password"
+        onChange={changeHandler}
+        required
+      />
+      <label>Confirm Password</label>
+      <input
+        placeholder="Enter your name"
+        type={"password"}
+        value={formData.password2}
+        name="password2"
+        onChange={changeHandler}
+        required
+      />
+      <input type="submit" value={"login"} />
+      <br />
+      <input
+        placeholder="Enter your name"
+        type="color"
+        name="color"
+        value={formData.color}
+        onChange={changeHandler}
+      />
+      <br />
+      <input
+        placeholder="Enter your name"
+        type="time"
+        // name="color"
+        // value={formData.color}
+        // onChange={changeHandler}
+      />
+    </form>
   );
 };
 
